@@ -4,18 +4,20 @@ from functools import partial
 
 window = tk.Tk()
 window.title("Calculator")
+window.geometry("320x480")
+
 
 mainFrame = ttk.Frame(window)
-mainFrame.grid(sticky = [tk.N, tk.S, tk.E, tk.W])
+
+mainFrame.pack(expand=True)
+
+window.resizable(False,False)
 
 calc_input = tk.StringVar()
-input_entry = ttk.Entry(mainFrame, textvariable=calc_input, state='disabled', justify='right')
-input_entry.grid(column=0, row=0, columnspan=4, sticky=[tk.N, tk.S, tk.E, tk.W])
-
+input_entry = tk.Entry(mainFrame, textvariable=calc_input, state='disabled', justify='right',font=('Ubuntu', 20))
+input_entry.grid(column=0, row=0, columnspan=4,rowspan=1, sticky="nsew")
 
 btn = ['123+', '456-', '789*', 'C0=/']
-
-
 
 def button_pressed(*args):
     cur_val = calc_input.get()
@@ -46,7 +48,8 @@ def button_pressed(*args):
 for i in range(1,5):
     for j in range(4):
         btnLabel = btn[i-1][j]
-        ttk.Button(mainFrame, text=btnLabel, command=partial(button_pressed,btnLabel)).grid(column=j, row=i)
+        tk.Button(mainFrame, width=1, height=2, text=btnLabel,
+                  command=partial(button_pressed,btnLabel), font=('Ubuntu', 20)).grid(column=j, row=i,sticky='nsew')
 
 
 window.mainloop()
