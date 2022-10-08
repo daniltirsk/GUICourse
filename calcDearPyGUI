@@ -1,0 +1,76 @@
+import dearpygui.dearpygui as dpg
+
+dpg.create_context()
+
+btn = ['123+', '456-', '789*', 'C0=/']
+
+
+def button_pressed(sender, app_data, user_data):
+    command = user_data
+    cur_val = dpg.get_value('out')
+
+    if cur_val == "ENTER":
+        cur_val = ""
+
+    new_val = ''
+    if command == '=':
+        if not cur_val[-1].isnumeric():
+            cur_val = cur_val[:-1]
+        try:
+            new_val = str(eval(cur_val))
+            if len(new_val) > 19:
+                new_val = '%.2E' % float(new_val)
+        except:
+            new_val = "ERROR"
+    elif command == 'C':
+        new_val = ''
+    elif cur_val == "ERROR":
+        return
+    elif len(cur_val) > 0 and cur_val.lower().find('e') != -1:
+        new_val = cur_val
+    elif not command.isnumeric():
+        if len(cur_val) > 0:
+            if not cur_val[-1].isnumeric():
+                new_val = cur_val[:-1] + command
+            else:
+                new_val = cur_val + command
+    else:
+        new_val = cur_val + command
+
+    if type(new_val) == float:
+        new_val = round(new_val, 10)
+
+    if len(new_val) < 20:
+        dpg.set_value('out', new_val)
+
+
+
+
+
+
+
+with dpg.window(tag="Primary Window"):
+    dpg.set_global_font_scale(2)
+    dpg.add_input_text(default_value="ENTER",tag="out",enabled=False)
+    dpg.set_item_width('out',305)
+
+    for i in range(4):
+        with dpg.group(horizontal=True):
+            for j in range(4):
+                dpg.add_button(label=btn[i][j], tag=btn[i][j])
+                dpg.set_item_width(btn[i][j], 70)
+                dpg.set_item_height(btn[i][j], 70)
+                dpg.set_item_callback(btn[i][j], button_pressed)
+                dpg.set_item_user_data(btn[i][j], btn[i][j])
+
+
+
+
+
+dpg.create_viewport(title='Custom Title', width=340, height=400,resizable=False)
+
+dpg.setup_dearpygui()
+dpg.show_viewport()
+dpg.set_primary_window("Primary Window", True)
+dpg.start_dearpygui()
+dpg.destroy_context()
