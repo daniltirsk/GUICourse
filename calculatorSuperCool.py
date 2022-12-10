@@ -27,7 +27,8 @@ def button_pressed(*args):
         if not cur_val[-1].isnumeric():
             cur_val = cur_val[:-1]
         try:
-            new_val = str(eval(cur_val))
+            new_val = eval(cur_val)
+            new_val = str(round(new_val,10))
             if len(new_val) > 19:
                 new_val = '%.2E' % float(new_val)
         except:
@@ -46,9 +47,6 @@ def button_pressed(*args):
                 new_val = cur_val + args[0]
     else:
         new_val = cur_val + args[0]
-
-    if type(new_val) == float:
-        new_val = round(new_val,10)
 
     if len(new_val)<20:
         calc_input.set(new_val)
